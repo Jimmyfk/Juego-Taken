@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=0.8">
+        <title>Juego taken</title>
+        <link rel="stylesheet" type="text/css" href="estilo.css">
+        <script type="text/javascript" src="rompecabezas.js"></script>
+    </head>
+    <body>
+        <main>
+            <div id="stats">
+                <p id="wins">Victorias: 0</p>
+                <p id="nowin"></p>
+                <p id="reloj"></p>
+            </div>
+            <div id="botones">
+                <div><h2>Elegir dificultad</h2></div>
+                <button id="facil" onclick="rompecabezas.reiniciar(3)">Fácil</button>
+                <button id="medio" onclick="rompecabezas.reiniciar(4)">Medio</button>
+                <button id="dificil" onclick="rompecabezas.reiniciar(5)">Díficil</button>
+                <button id="extremo" onclick="rompecabezas.reiniciar(6)">Extremo</button>
+                <button id="imposible" onclick="rompecabezas.reiniciar(10)">Imposible</button>
+                <button id="trucar" onclick="rompecabezas.trucar()">Trucar</button>
+            </div>
+        </main>
+        <script>
+            let rompecabezas = new Rompecabezas(3);
+        </script>
+        <div id="boton"><button onclick="location.reload()">Reiniciar</button></div>
+    </body>
+</html>

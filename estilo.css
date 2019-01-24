@@ -1,0 +1,200 @@
+*
+{
+    margin: 0;
+    padding: 0;
+}
+
+body
+{
+    background-color: plum;
+    font-family: sans-serif;
+}
+
+table
+{
+    border-collapse: collapse;
+    border: solid blueviolet 5px;
+    background-color: deepskyblue;
+    font-size: 38px;
+    margin: 50px auto;
+}
+
+tr, td
+{
+    border: solid darkviolet 2px;
+    width: 307px;
+}
+
+td
+{
+    width: 80px;
+    height: 80px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+td:hover
+{
+    color: darkorchid;
+}
+
+caption
+{
+    color: blue;
+    font-size: 35px;
+    padding-bottom: 20px;
+    width: 400px;
+    text-align: left;
+}
+
+#stats, #botones
+{
+    width: 20%;
+}
+
+#stats
+{
+    background-color: deepskyblue;
+    float: left;
+    margin-left: 50px;
+    border: outset blue 5px;
+}
+
+#botones
+{
+    background-color: mediumvioletred;
+    float: right;
+    margin-right: 50px;
+    border: ridge darkviolet 5px;
+}
+
+#boton {
+    text-align: center;
+}
+
+#boton button
+{
+    padding: 0.5em 3em;
+    font-size: large;
+    border: solid blue 1px;
+    background-color: lightskyblue;
+}
+
+#boton button:hover
+{
+    background-color: deepskyblue;
+    border: solid 1px;
+}
+
+#stats p
+{
+    margin: 12px 5px;
+    font-weight: bold;
+}
+
+#botones h2
+{
+    text-align: center;
+    margin: 10px 0;
+}
+
+#botones button
+{
+    display: block;
+    width: 80px;
+    height: 22px;
+    margin: 10px;
+    font-size: 90%;
+    font-weight: bold;
+}
+
+#facil
+{
+    background-color: lightgreen;
+    border: solid green 1px;
+}
+
+#facil:hover
+{
+    background-color: springgreen;
+}
+
+#medio
+{
+    background-color: yellow;
+    border: solid orange 1px;
+}
+
+#medio:hover
+{
+    background-color: gold;
+    border-color: yellow;
+}
+
+#dificil
+{
+    background-color: orange;
+    border: solid yellow 1px;
+}
+
+#dificil:hover
+{
+    background-color: darkorange;
+}
+
+#extremo
+{
+    background-color: red;
+    border: solid darkred 1px;
+}
+
+#extremo:hover
+{
+    background-color: crimson;
+}
+
+#imposible
+{
+    background-color: black;
+    border: solid white 2px;
+    color: white;
+}
+
+#wins
+{
+    color: darkgreen;
+    font-size: 22px;
+}
+
+#reloj
+{
+    font-size: 18px;
+    border: solid blue;
+    border-width: 2px 0 0 0;
+}
+
+@media screen and (min-width: 1900px) {
+
+    td
+    {
+        width: 100px;
+        height: 100px;
+    }
+
+}
+
+@media screen and (max-width: 600px){
+     table
+     {
+         min-width: 50%;
+         max-width: 82%;
+         min-height: 120px;
+     }
+
+    #stats, #botones
+    {
+        width: 40%;
+        margin: 15px;
+    }
+
+ }
