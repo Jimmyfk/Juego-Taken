@@ -162,8 +162,7 @@ class Rompecabezas {
         return i === vector.length;
     }
 
-    tiempo()
-    {
+    tiempo() {
         let ahora = new Date().getTime();
         let tiempo = new Date(ahora - this.inicio);
 
@@ -198,8 +197,7 @@ class Rompecabezas {
         this.trampa = true;
     }
 
-    reiniciar(tam)
-    {
+    reiniciar(tam) {
         let tabla = document.getElementsByTagName("table")[0];
         let main = document.getElementsByTagName("main")[0];
         main.removeChild(tabla);
