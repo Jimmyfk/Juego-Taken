@@ -5,11 +5,10 @@ class Rompecabezas {
         this.contador = 0;
         this.victorias = 0;
         this.noVictorias = 0;
-        this.blankPos = null;
         this.inicializar(size);
+        this.size = size;
         // Initialize variables to store the start time and the current time
         this.startTime = new Date().getTime();
-        this.currentTime = this.startTime;
     }
 
     inicializar(size) {
@@ -40,12 +39,12 @@ class Rompecabezas {
     llenar() {
         // Initialize an array to keep track of which numbers have been used
         let numerosUsados = [];
-        for (let i = 0; i < this.tabla.length; i++) {
-            for (let j = 0; j < this.tabla[i].length; j++) {
+        for (let i = 0; i < this.size; i++) {
+            for (let j = 0; j < this.size; j++) {
                 // Generate a random number that has not been used
                 let aleatorio;
                 do {
-                    aleatorio = Math.floor(Math.random() * Math.pow(this.tabla.length, 2));
+                    aleatorio = Math.floor(Math.random() * Math.pow(this.size, 2));
                 } while (numerosUsados[aleatorio]);
                 numerosUsados[aleatorio] = 1;
 
@@ -61,14 +60,14 @@ class Rompecabezas {
         // Check if the puzzle is solvable using the parity of the number of inversions and the blank space's row
         const intercambios = this.contarIntercambios();
         const pos = this.buscarNull();
-        return (this.tabla.length & 1) ? !(intercambios & 1) : (pos & 1) ? !(intercambios & 1) : intercambios & 1;
+        return (this.size & 1) ? !(intercambios & 1) : (pos & 1) ? !(intercambios & 1) : intercambios & 1;
     }
 
     contarIntercambios() {
         // Count the number of inversions in the puzzle (pairs of elements that are out of order)
         let intercambios = 0;
-        for (let i = 0; i < this.tabla.length - 1; i++) {
-            for (let j = i + 1; j < this.tabla.length; j++) {
+        for (let i = 0; i < this.size - 1; i++) {
+            for (let j = i + 1; j < this.size; j++) {
                 if (this.tabla[j] && this.tabla[i] && this.tabla[i] > this.tabla[j]) {
                     intercambios++;
                 }
@@ -80,27 +79,27 @@ class Rompecabezas {
     movimiento(fila, columna) {
         // Check if the clicked cell is adjacent to the blank space
         if ((fila > 0 && this.tabla[fila - 1][columna] === null) ||
-            (fila < this.tabla.length - 1 && this.tabla[fila + 1][columna] === null) ||
+            (fila < this.size - 1 && this.tabla[fila + 1][columna] === null) ||
             (columna > 0 && this.tabla[fila][columna - 1] === null) ||
-            (columna < this.tabla.length - 1 && this.tabla[fila][columna + 1] === null)) {
+            (columna < this.size - 1 && this.tabla[fila][columna + 1] === null)) {
             // Store the value of the clicked cell in a temporary variable
             const temp = this.tabla[fila][columna];
             // Swap the clicked cell with the blank space
             this.tabla[fila][columna] = null;
             if (fila > 0 && this.tabla[fila - 1][columna] === null) {
                 this.tabla[fila - 1][columna] = temp;
-            } else if (fila < this.tabla.length - 1 && this.tabla[fila + 1][columna] === null) {
+            } else if (fila < this.size - 1 && this.tabla[fila + 1][columna] === null) {
                 this.tabla[fila + 1][columna] = temp;
             } else if (columna > 0 && this.tabla[fila][columna - 1] === null) {
                 this.tabla[fila][columna - 1] = temp;
-            } else if (columna < this.tabla.length - 1 && this.tabla[fila][columna + 1] === null) {
+            } else if (columna < this.size - 1 && this.tabla[fila][columna + 1] === null) {
                 this.tabla[fila][columna + 1] = temp;
             }
-            // Update the counter and display the updated puzzle
-            this.contador++;
-            this.visualizar();
-            this.comprobarFinal();
         }
+        // Update the counter and display the updated puzzle
+        this.contador++;
+        this.visualizar();
+        this.comprobarFinal();
     }
 
     comprobarFinal() {
@@ -113,7 +112,7 @@ class Rompecabezas {
                 this.trampa = false;
             }
             if (confirm("Has ganado ¿Reiniciar?"))
-                this.reiniciar(this.tabla.length);
+                this.reiniciar(this.size);
         }
     }
 
@@ -138,12 +137,12 @@ class Rompecabezas {
         }
         // Update the table with the current puzzle values
         table.innerHTML = "";
-        for (let i = 0; i < this.tabla.length; i++) {
+        for (let i = 0; i < this.size; i++) {
             const fila = document.createElement("tr");
-            for (let j = 0; j < this.tabla.length; j++) {
+            for (let j = 0; j < this.size; j++) {
                 const num = document.createElement("td");
                 // Update the id attribute based on the current values of i and j
-                num.setAttribute('id', i * this.tabla.length + j);
+                num.setAttribute('id', i * this.size + j);
                 num.setAttribute('onclick', 'rompecabezas.movimiento(' + i + ", " + j + ')');
                 fila.appendChild(num);
                 num.innerHTML = this.tabla[i][j] || "&nbsp;";
@@ -172,10 +171,10 @@ class Rompecabezas {
     }
 
     buscarNull() {
-        for (let i = this.tabla.length - 1; i >= 0; i--) {
-            for (let j = this.tabla.length - 1; j >= 0; j--) {
+        for (let i = this.size - 1; i >= 0; i--) {
+            for (let j = this.size - 1; j >= 0; j--) {
                 if (!this.tabla[i][j])
-                    return this.tabla.length - i;
+                    return this.size - i;
             }
         }
     }
@@ -196,7 +195,7 @@ class Rompecabezas {
         }
 
         // Check if the cell below the empty cell can be moved
-        if (row < this.tabla.length - 1) {
+        if (row < this.size - 1) {
             let state = this.copyState(current);
             state[row][col] = state[row + 1][col];
             state[row + 1][col] = null;
@@ -212,7 +211,7 @@ class Rompecabezas {
         }
 
         // Check if the cell to the right of the empty cell can be moved
-        if (col < this.tabla.length - 1) {
+        if (col < this.size - 1) {
             let state = this.copyState(current);
             state[row][col] = state[row][col + 1];
             state[row][col + 1] = null;
@@ -313,7 +312,7 @@ class Rompecabezas {
     // Returns the solved state for the puzzle
     getSolvedState() {
         let solved = [];
-        let n = this.tabla.length;
+        let n = this.size;
         for (let i = 0; i < n; i++) {
             solved[i] = [];
             for (let j = 0; j < n; j++) {
