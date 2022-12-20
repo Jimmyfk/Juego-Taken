@@ -6,7 +6,6 @@ class Rompecabezas {
         this.victorias = 0;
         this.noVictorias = 0;
         this.inicializar(size);
-        this.size = size;
         // Initialize variables to store the start time and the current time
         this.startTime = new Date().getTime();
     }
@@ -14,6 +13,7 @@ class Rompecabezas {
     inicializar(size) {
         // Initialize the puzzle array
         this.tabla = [];
+        this.size = size;
         for (let i = 0; i < size; i++) {
             this.tabla[i] = [];
             for (let j = 0; j < size; j++) {
