@@ -1,22 +1,22 @@
 class Rompecabezas {
 
-    constructor(tamano) {
+    constructor(size) {
         this.tabla = [];
         this.contador = 0;
         this.victorias = 0;
         this.noVictorias = 0;
         this.inicio = new Date().getTime();
-        this.inicializar(tamano);
+        this.inicializar(size);
     }
 
-    inicializar(tamano) {
-        this.tabla.length = tamano;
+    inicializar(size) {
+        this.tabla.length = size;
         this.trampa = false;
         for (let i = 0; i < this.tabla.length; i++) {
             this.tabla[i] = [];
             this.tabla[i].length = this.tabla.length;
         }
-        this.crearTablero(tamano);
+        this.crearTablero(size);
         do
             this.llenar();
         while (!this.tieneSolucion());
@@ -24,16 +24,16 @@ class Rompecabezas {
         this.tiempo();
     }
 
-    crearTablero(tamano) {
+    crearTablero(size) {
         let table = document.createElement("table");
         let main = document.getElementsByTagName("main")[0];
         main.appendChild(table);
         let titulo = document.createElement("caption");
         table.appendChild(titulo);
         titulo.innerHTML = "Nº de movimientos: ";
-        for (let i = 0, valor = 0; i < tamano; i++) {
+        for (let i = 0, valor = 0; i < size; i++) {
             let fila = document.createElement("tr");
-            for (let j = 0; j < tamano; j++, valor++) {
+            for (let j = 0; j < size; j++, valor++) {
                 let num = document.createElement("td");
                 num.setAttribute('id', valor.toString());
                 num.setAttribute('onclick', 'rompecabezas.movimiento(' + i + ", " + j + ')');
