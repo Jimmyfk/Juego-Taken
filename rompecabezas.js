@@ -99,7 +99,6 @@ class Rompecabezas {
         // Update the counter and display the updated puzzle
         this.contador++;
         this.visualizar();
-        this.comprobarFinal();
     }
 
     comprobarFinal() {
@@ -110,7 +109,6 @@ class Rompecabezas {
             else {
                 this.noVictorias++;
                 this.trampa = false;
-                setTimeout(() => null, 1000);
             }
             if (confirm("Has ganado ¿Reiniciar?"))
                 this.reiniciar(this.size);
@@ -181,12 +179,13 @@ class Rompecabezas {
         }
     }
 
-    // todo pause after win
     trucar() {
        this.tabla = this.getSolvedState();
        this.trampa = true;
-       setTimeout(() => false, 500);
-       this.visualizar();
+       const t = this;
+        setTimeout(() => {
+            t.visualizar();
+        }, 500);
     }
 
     // Returns the solved state for the puzzle
