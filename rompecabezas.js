@@ -110,6 +110,7 @@ class Rompecabezas {
             else {
                 this.noVictorias++;
                 this.trampa = false;
+                setTimeout(() => null, 1000);
             }
             if (confirm("Has ganado ¿Reiniciar?"))
                 this.reiniciar(this.size);
@@ -154,6 +155,7 @@ class Rompecabezas {
         titulo.innerHTML = "Nº de movimientos: " + this.contador;
         table.insertBefore(titulo, table.firstChild);
         this.tiempo();
+        this.comprobarFinal();
     }
 
 
@@ -179,152 +181,33 @@ class Rompecabezas {
         }
     }
 
-// Returns an array of the possible next states for the puzzle
-    getNextStates(current) {
-        let next = [];
-
-        // Find the position of the null (empty) cell
-        let [row, col] = this.findNull(current);
-
-        // Check if the cell above the empty cell can be moved
-        if (row > 0) {
-            let state = this.copyState(current);
-            state[row][col] = state[row - 1][col];
-            state[row - 1][col] = null;
-            next.push(state);
-        }
-
-        // Check if the cell below the empty cell can be moved
-        if (row < this.size - 1) {
-            let state = this.copyState(current);
-            state[row][col] = state[row + 1][col];
-            state[row + 1][col] = null;
-            next.push(state);
-        }
-
-        // Check if the cell to the left of the empty cell can be moved
-        if (col > 0) {
-            let state = this.copyState(current);
-            state[row][col] = state[row][col - 1];
-            state[row][col - 1] = null;
-            next.push(state);
-        }
-
-        // Check if the cell to the right of the empty cell can be moved
-        if (col < this.size - 1) {
-            let state = this.copyState(current);
-            state[row][col] = state[row][col + 1];
-            state[row][col + 1] = null;
-            next.push(state);
-        }
-
-        return next;
-    }
-
-    // Finds the position of the null (empty) cell in the given state
-    findNull(state) {
-        for (let i = 0; i < state.length; i++) {
-            for (let j = 0; j < state[i].length; j++) {
-                if (state[i][j] === null) {
-                    return [i, j];
-                }
-            }
-        }
-        return [-1, -1];
-    }
-
-    // Returns a deep copy of the given state
-    copyState(state) {
-        // Create a new 2D array with the same dimensions as the given state
-        const copy = [];
-        for (let i = 0; i < state.length; i++) {
-            copy[i] = [];
-            for (let j = 0; j < state[i].length; j++) {
-                copy[i][j] = state[i][j];
-            }
-        }
-
-        return copy;
-    }
-
-    // Returns the number of misplaced tiles in the given state
-    getMisplacedTiles(state, target) {
-        let misplaced = 0;
-        for (let i = 0; i < state.length; i++) {
-            for (let j = 0; j < state[i].length; j++) {
-                if (state[i][j] !== null && state[i][j] !== target[i][j]) {
-                    misplaced++;
-                }
-            }
-        }
-        return misplaced;
-    }
-
-// Uses a breadth-first search algorithm with pruning to find a solution to the puzzle
+    // todo pause after win
     trucar() {
-        let queue = [];
-        let visited = new Set();
-        let current = this.tabla;
-        let target = this.getSolvedState();
-
-        queue.push({ state: current, misplaced: this.getMisplacedTiles(current, target) });
-        visited.add(this.getHash(current));
-
-        while (queue.length > 0) {
-            current = queue.shift();
-            console.log('Current state:', current.state);
-            console.log('Misplaced tiles:', current.misplaced);
-            console.log('Target state:', target);
-            console.log('Are states equal:', this.compare(current.state, target));
-
-            if (this.compare(current.state, target)) {
-                console.log('Solution found!');
-                this.tabla = current.state;
-                this.trampa = true;
-                this.visualizar();
-                this.comprobarFinal();
-                return;
-            }
-
-            const next = this.getNextStates(current.state);
-            console.log('Next states:', next);
-
-            for (let i = 0; i < next.length; i++) {
-                const state = next[i];
-                console.log('Current hash:', this.getHash(current.state));
-                console.log('Target hash:', this.getHash(target));
-
-                const hash = this.getHash(state);
-                if (!visited.has(hash)) {
-                    const misplaced = this.getMisplacedTiles(state, target);
-                    queue.push({ state, misplaced });
-                    visited.add(hash);
-                }
-            }
-
-            // Sort the queue by the number of misplaced tiles, so that states with fewer misplaced tiles are explored first
-            queue.sort((a, b) => a.misplaced - b.misplaced);
-        }
-
-        console.log('Solution not found.');
+       this.tabla = this.getSolvedState();
+       this.trampa = true;
+       setTimeout(() => false, 500);
+       this.visualizar();
     }
 
     // Returns the solved state for the puzzle
     getSolvedState() {
         let solved = [];
-        let n = this.size;
-        for (let i = 0; i < n; i++) {
+        for (let i = 0; i < this.size; i++) {
             solved[i] = [];
-            for (let j = 0; j < n; j++) {
-                solved[i][j] = i * n + j + 1;
+            for (let j = 0; j < this.size; j++) {
+                solved[i][j] = i * this.size + j + 1;
             }
         }
-        solved[n - 1][n - 1] = null;
+        solved[this.size - 1][this.size - 1] = null;
         return solved;
     }
 
     // Returns a unique hash value for the given puzzle state
     getHash(state) {
+        if (!Array.isArray(state) || !Array.isArray(state[0])) {
+            console.error('Invalid state:', state);
+            return '';
+        }
         if (!state.every(x => x !== null)) {
             return null;
         }
@@ -333,8 +216,12 @@ class Rompecabezas {
 
     // Returns true if the two puzzle states are identical, false otherwise
     compare(puzzle1, puzzle2) {
-        for (let i = 0; i < puzzle1.length; i++) {
-            for (let j = 0; j < puzzle1[i].length; j++) {
+        if (!puzzle1 || !puzzle2) {
+            return false;
+        }
+
+        for (let i = 0; i < this.size; i++) {
+            for (let j = 0; j < this.size; j++) {
                 if (puzzle1[i][j] !== puzzle2[i][j]) {
                     return false;
                 }
