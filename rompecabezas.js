@@ -248,44 +248,63 @@ class Rompecabezas {
         return copy;
     }
 
-    // Uses a breadth-first search algorithm to find a solution to the puzzle
+    // Returns the number of misplaced tiles in the given state
+    getMisplacedTiles(state, target) {
+        let misplaced = 0;
+        for (let i = 0; i < state.length; i++) {
+            for (let j = 0; j < state[i].length; j++) {
+                if (state[i][j] !== null && state[i][j] !== target[i][j]) {
+                    misplaced++;
+                }
+            }
+        }
+        return misplaced;
+    }
+
+// Uses a breadth-first search algorithm with pruning to find a solution to the puzzle
     trucar() {
         let queue = [];
         let visited = new Set();
         let current = this.tabla;
         let target = this.getSolvedState();
 
-        queue.push(current);
+        queue.push({ state: current, misplaced: this.getMisplacedTiles(current, target) });
         visited.add(this.getHash(current));
 
         while (queue.length > 0) {
             current = queue.shift();
-            console.log('Current state:', current);
+            console.log('Current state:', current.state);
+            console.log('Misplaced tiles:', current.misplaced);
             console.log('Target state:', target);
-            console.log('Are states equal:', this.compare(current, target));
+            console.log('Are states equal:', this.compare(current.state, target));
 
-            if (this.compare(current, target)) {
+            if (this.compare(current.state, target)) {
                 console.log('Solution found!');
-                this.tabla = current;
+                this.tabla = current.state;
                 this.trampa = true;
                 this.visualizar();
+                this.comprobarFinal();
                 return;
             }
 
-            const next = this.getNextStates(current);
+            const next = this.getNextStates(current.state);
             console.log('Next states:', next);
 
             for (let i = 0; i < next.length; i++) {
                 const state = next[i];
-                console.log('Current hash:', this.getHash(current));
+                console.log('Current hash:', this.getHash(current.state));
                 console.log('Target hash:', this.getHash(target));
 
                 const hash = this.getHash(state);
                 if (!visited.has(hash)) {
-                    queue.push(state);
+                    const misplaced = this.getMisplacedTiles(state, target);
+                    queue.push({ state, misplaced });
                     visited.add(hash);
                 }
             }
+
+            // Sort the queue by the number of misplaced tiles, so that states with fewer misplaced tiles are explored first
+            queue.sort((a, b) => a.misplaced - b.misplaced);
         }
 
         console.log('Solution not found.');
@@ -310,7 +329,7 @@ class Rompecabezas {
         if (!state.every(x => x !== null)) {
             return null;
         }
-        return state.join('');
+        return state.flat().join(',');
     }
 
     // Returns true if the two puzzle states are identical, false otherwise
