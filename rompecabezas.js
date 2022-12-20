@@ -1,10 +1,13 @@
 class Rompecabezas {
+
     constructor(size) {
         // Initialize properties for tracking puzzle state and statistics
         this.tabla = [];
         this.contador = 0;
         this.victorias = 0;
         this.noVictorias = 0;
+        this.setTimeout = false;
+        this.timeout = null;
         this.inicializar(size);
         // Initialize variables to store the start time and the current time
         this.startTime = new Date().getTime();
@@ -110,10 +113,22 @@ class Rompecabezas {
                 this.noVictorias++;
                 this.trampa = false;
             }
-            if (confirm("Has ganado ¿Reiniciar?"))
-                this.reiniciar(this.size);
+
+            // Only set the timeout if it hasn't already been set
+            if (!this.timeoutSet) {
+                this.timeoutSet = true;
+                this.timeout = setTimeout(() => {
+                    if (confirm("Has ganado ¿Reiniciar?")) {
+                        this.reiniciar(this.size);
+                    }
+                    this.timeoutSet = false;
+                }, 200);
+            } else {
+                clearTimeout(this.timeout);
+            }
         }
     }
+
 
     reiniciar(tam) {
         let tabla = document.getElementsByTagName("table")[0];
@@ -182,10 +197,7 @@ class Rompecabezas {
     trucar() {
        this.tabla = this.getSolvedState();
        this.trampa = true;
-       const t = this;
-        setTimeout(() => {
-            t.visualizar();
-        }, 500);
+       this.visualizar();
     }
 
     // Returns the solved state for the puzzle
