@@ -143,7 +143,7 @@ class Rompecabezas {
             for (let j = 0; j < this.size; j++) {
                 const num = document.createElement("td");
                 // Update the id attribute based on the current values of i and j
-                num.setAttribute('id', i * this.size + j);
+                num.setAttribute('id', i * this.size + j.toLocaleString());
                 num.setAttribute('onclick', 'rompecabezas.movimiento(' + i + ", " + j + ')');
                 fila.appendChild(num);
                 num.innerHTML = this.tabla[i][j] || "&nbsp;";
@@ -200,18 +200,6 @@ class Rompecabezas {
         }
         solved[this.size - 1][this.size - 1] = null;
         return solved;
-    }
-
-    // Returns a unique hash value for the given puzzle state
-    getHash(state) {
-        if (!Array.isArray(state) || !Array.isArray(state[0])) {
-            console.error('Invalid state:', state);
-            return '';
-        }
-        if (!state.every(x => x !== null)) {
-            return null;
-        }
-        return state.flat().join(',');
     }
 
     // Returns true if the two puzzle states are identical, false otherwise
