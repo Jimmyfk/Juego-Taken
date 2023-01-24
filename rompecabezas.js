@@ -46,8 +46,8 @@ class Rompecabezas {
             for (let j = 0; j < this.size; j++) {
                 // Generate a random number that has not been used
                 let aleatorio;
-                do {
-                    aleatorio = Math.floor(Math.random() * Math.pow(this.size, 2));
+                do {  // little trick to avoid math pow call and looks cool and clean 
+                    aleatorio = Math.floor(Math.random() * (this.size ** 2));
                 } while (numerosUsados[aleatorio]);
                 numerosUsados[aleatorio] = 1;
 
@@ -63,6 +63,7 @@ class Rompecabezas {
         // Check if the puzzle is solvable using the parity of the number of inversions and the blank space's row
         const intercambios = this.contarIntercambios();
         const pos = this.buscarNull();
+        // Bitwise operators to check parity  If (n & 1 == 0) then n it's even, odd otherwise. Lost count of the nested Ifss
         return (this.size & 1) ? !(intercambios & 1) : (pos & 1) ? !(intercambios & 1) : intercambios & 1;
     }
 
